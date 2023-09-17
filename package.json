@@ -1,0 +1,18 @@
+{
+  "name": "schedule-exporter",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "gen-for-google": "node main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "csv-writer": "^1.6.0",
+    "dayjs": "^1.11.9",
+    "node-html-parser": "^6.1.10",
+    "remeda": "^1.26.0"
+  }
+}
