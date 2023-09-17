@@ -68,9 +68,9 @@ const description = (scheduleRow) => {
     }
 };
 
-const writeCsv = (records) => {
+const writeCsv = (records, startMonth, endMonth) => {
     const csvWriter = createObjectCsvWriter({
-        path: 'dist/川崎ブレイブサンダース試合日程（Googleカレンダー用）.csv',
+        path: `dist/川崎ブレイブサンダース試合日程${startMonth}〜${endMonth}（Googleカレンダー用）.csv`,
         header: [
             {id: 'subject', title: 'Subject'},
             {id: 'startDate', title: 'Start Date'},
@@ -96,6 +96,10 @@ const formatRow = ({year, month, row}) => {
     };
 };
 
+const formatMonth = ({year, month}) => {
+    return `${year}-${month.toString().padStart(2, "0")}`;
+};
+
 export const generateCsv = async (pageContents) => {
     const records = R.pipe(
         pageContents,
@@ -103,5 +107,8 @@ export const generateCsv = async (pageContents) => {
         R.map(x => formatRow(x))
     );
 
-    return writeCsv(records);
+    const startMonth = formatMonth(pageContents[0]);
+    const endMonth = formatMonth(pageContents[pageContents.length - 1]);
+
+    return writeCsv(records, startMonth, endMonth);
 };
