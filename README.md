@@ -1,5 +1,7 @@
 # kawasaki-bravethunders-schedule-exporter 
 
+This software is released under the MIT License, see LICENSE.txt.
+
 川崎ブレイブサンダースの試合日程を[公式HP](https://kawasaki-bravethunders.com/)から取得し、GoogleCalendarにインポートできる形のCSVを出力するツール。
 
 # 注意
