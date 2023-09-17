@@ -6,6 +6,6 @@ const [, , startMonth, endMonth] = process.argv;
 
 const yearMonthList = parse(startMonth, endMonth);
 
-await fetchPage(yearMonthList);
+const pageContents = await fetchPage(yearMonthList);
 
-await generateCsv(yearMonthList);
+await generateCsv(pageContents);

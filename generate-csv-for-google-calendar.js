@@ -1,12 +1,14 @@
-import fs from 'fs';
 import { parse } from 'node-html-parser';
 import dayjs from 'dayjs';
 import { createObjectCsvWriter } from 'csv-writer';
 import * as R from 'remeda';
 
-const parseScheduleFor = ({year, month}) => {
-    const file = fs.readFileSync(`./input/kawasaki-bravethunders-schedule-${year}-${month}.html`);
-    const root = parse(file);
+/**
+ * @param {{year: number, month: number, pageContnt: string}} param0 
+ * @returns 
+ */
+const parseScheduleFor = ({year, month, pageContent}) => {
+    const root = parse(pageContent);
     const scheduleRows = root.querySelector(".schedule-ul").childNodes.filter((element) => element.rawTagName === "li");
     return scheduleRows.map((row) => ({year, month, row}));
 };
@@ -94,9 +96,9 @@ const formatRow = ({year, month, row}) => {
     };
 };
 
-export const generateCsv = async (yearMonthList) => {
+export const generateCsv = async (pageContents) => {
     const records = R.pipe(
-        yearMonthList,
+        pageContents,
         R.flatMap(x => parseScheduleFor(x)),
         R.map(x => formatRow(x))
     );
