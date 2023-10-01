@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import { parse } from 'node-html-parser';
 import dayjs from 'dayjs';
 import { createObjectCsvWriter } from 'csv-writer';
@@ -79,8 +81,9 @@ const description = (scheduleRow) => {
 };
 
 const writeCsv = (records, startMonth, endMonth) => {
+    const outputFilePath = `dist/川崎ブレイブサンダース試合日程${startMonth}〜${endMonth}（Googleカレンダー用）.csv`;
     const csvWriter = createObjectCsvWriter({
-        path: `dist/川崎ブレイブサンダース試合日程${startMonth}〜${endMonth}（Googleカレンダー用）.csv`,
+        path: outputFilePath,
         header: [
             {id: 'subject', title: 'Subject'},
             {id: 'startDate', title: 'Start Date'},
@@ -93,6 +96,7 @@ const writeCsv = (records, startMonth, endMonth) => {
         ]
     });
      
+    fs.mkdirSync(path.dirname(outputFilePath), {recursive: true});
     return csvWriter.writeRecords(records);
 };
 
