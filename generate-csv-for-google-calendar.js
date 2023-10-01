@@ -13,6 +13,11 @@ const parseScheduleFor = ({year, month, pageContent}) => {
     return scheduleRows.map((row) => ({year, month, row}));
 };
 
+/**
+ * カレンダー予定のタイトル
+ * @param {HTMLElement} scheduleRow 
+ * @returns {string}
+ */
 const subject = (scheduleRow) => {
     const tableTag = scheduleRow.childNodes[3];
     const studiumTd = tableTag.querySelector("td.stadium-detail");
@@ -30,22 +35,27 @@ const dateInfo = (scheduleRow, year, month) => {
      */
     const rawDayStr = dayTd.querySelector("p.day").innerText;
     const day = rawDayStr.split(".")[1];
-    const startTd = tableTag.querySelector("td.start-time-box")
 
+    const startTd = tableTag.querySelector("td.start-time-box")
     /**
      * 18:05 みたいな感じ。
+     * 日時が未確定の場合は、空文字になる
      */
     const rawStartTime = startTd.querySelector("p.start-time").innerText.trim();
 
-    const startTime = dayjs(`2023-01-01 ${rawStartTime}`).format("hh:mm A");
+    const startDate = `${month.toString().padStart(2, "0")}/${day.padStart(2, "0")}/${year}`;
+    const endDate = startDate;
 
+    if(rawStartTime === "") {
+        // この場合は、時間が未確定
+        return { startDate, endDate };
+    }
+
+    const startTime = dayjs(`2023-01-01 ${rawStartTime}`).format("hh:mm A");
     /**
      * 終了時刻は開始から２時間にしておく。時刻の計算だけしたいので、日付はテキトー。
      */
     const endTime = dayjs(`2023-01-01 ${rawStartTime}`).add(2, 'hours').format("hh:mm A");
-
-    const startDate = `${month.toString().padStart(2, "0")}/${day.padStart(2, "0")}/${year}`;
-    const endDate = startDate;
 
     return { startDate, startTime, endDate, endTime };
 };
