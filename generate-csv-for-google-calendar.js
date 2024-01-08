@@ -28,6 +28,9 @@ const subject = (scheduleRow) => {
     return `[${homeaway}]川崎ブレイブサンダースvs${teamname}`;
 };
 
+/**
+ * 日付情報の取得
+ */
 const dateInfo = (scheduleRow, year, month) => {
     const tableTag = scheduleRow.childNodes[3];
     const dayTd = tableTag.querySelector("td.day-box");
@@ -80,6 +83,20 @@ const description = (scheduleRow) => {
     }
 };
 
+/**
+ * 既に試合が終了している予定かどうか判定する。
+ *
+ * NOTE: 既に試合が終了している場合はCSVに出力しないこととする。
+ */
+const isFinishedSchedule = ({row: scheduleRow}) => {
+    /**
+     * 試合終了した予定の行は`td.result-area`要素にて結果が表示されている。
+     * まだ試合終了していない予定にはこの要素は存在しない。よってこちらの存在の有無で判定する。
+     */
+    const resultArea = scheduleRow.childNodes[3].querySelector("td.result-area");
+    return resultArea !== null;
+};
+
 const writeCsv = (records, startMonth, endMonth) => {
     const outputFilePath = `dist/川崎ブレイブサンダース試合日程${startMonth}〜${endMonth}（Googleカレンダー用）.csv`;
     const csvWriter = createObjectCsvWriter({
@@ -117,8 +134,9 @@ const formatMonth = ({year, month}) => {
 export const generateCsv = async (pageContents) => {
     const records = R.pipe(
         pageContents,
-        R.flatMap(x => parseScheduleFor(x)),
-        R.map(x => formatRow(x))
+        R.flatMap(parseScheduleFor),
+        R.filter(scheduleRow => !isFinishedSchedule(scheduleRow)),
+        R.map(formatRow)
     );
 
     const startMonth = formatMonth(pageContents[0]);
