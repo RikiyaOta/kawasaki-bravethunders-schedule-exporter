@@ -94,7 +94,6 @@ const isFinishedSchedule = ({row: scheduleRow}) => {
      * まだ試合終了していない予定にはこの要素は存在しない。よってこちらの存在の有無で判定する。
      */
     const resultArea = scheduleRow.childNodes[3].querySelector("td.result-area");
-    console.log({scheduleRow, resultArea});
     return resultArea !== null;
 };
 
